@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt_br">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Game Block</title>
+
+	<link rel="stylesheet" href="style.css">
+	<script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+	<h1 class="title">Game Block</h1>
+	<div class="container">
+		<div>
+			<table class="t-players">
+				<tr>
+					<th>Player</th>
+					<th>Score</th>
+				</tr>
+			</table>
+		</div>
+
+		<div class="game">
+			<div class="block"></div>
+
+			<div id="keyboard">
+				<input type="button" class="arrow" id="ArrowUp" value="↑"></input><br>
+				<input type="button" class="arrow" id="ArrowLeft" value="←"></input>
+				<input type="button" class="arrow" id="ArrowDown" value="↓"></input>
+				<input type="button" class="arrow" id="ArrowRight" value="→"></input>
+			</div>
+		</div>
+	</div>
+	<script src="script.js"></script>
+</body>
+
+</html>
