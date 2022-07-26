@@ -3,6 +3,7 @@ const http = require('http');
 const { Server } = require("socket.io");
 const path = require('path');
 const cors = require('cors');
+const axios = require('axios');
 
 const app = express();
 const server = http.createServer(app);
@@ -19,7 +20,7 @@ let fruit = {
 };
 
 io.on('connection', (socket) => {
-	const id = 'player-'+socket.id;
+	const id = 'player-' + socket.id;
 	console.log('Player connected: ', id);
 
 	socket.on('new-player', ({ nick }) => {
@@ -32,7 +33,7 @@ io.on('connection', (socket) => {
 			score: 0,
 			nick
 		};
-		
+
 		GetFruit();
 		io.emit('all-new', Object.values(players));
 	});
@@ -95,5 +96,14 @@ io.on('connection', (socket) => {
 function Random(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
+
+app.get('/status', (req, res) => {
+	res.status(200).json({ status: 200 })
+});
+
+setInterval(async () => {
+	await axios.get('https://gameblock0.herokuapp.com/status');
+}, 60000);
 
 module.exports = { app, server, io };
