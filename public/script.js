@@ -3,10 +3,13 @@ const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
 if (!isMobile) keyboard.style.display = 'none';
 
+const MyNick = prompt('Digite seu nick!');
+
 const socket = io.connect(window.location.origin);
 socket.on('connect', () => {
-	NewPlayer({ id: socket.id, x: 0, y: 0, score: 0 });
-
+	NewPlayer({ id: socket.id, x: 0, y: 0, score: 0, nick: MyNick });
+	socket.emit('new-player', { nick: MyNick });
+	
 	socket.on('all-new', (players) => {
 		players.forEach(player => {
 			if (player.id === socket.id) return;
@@ -35,7 +38,7 @@ socket.on('connect', () => {
 	});
 });
 
-const NewPlayer = ({ id, x, y, score }) => {
+const NewPlayer = ({ id, x, y, score, nick }) => {
 	const player = document.createElement('div');
 
 	player.classList.add('player');
@@ -48,7 +51,7 @@ const NewPlayer = ({ id, x, y, score }) => {
 	const tdName = document.createElement('td');
 	const tdScore = document.createElement('td');
 
-	tdName.innerHTML = id;
+	tdName.innerHTML = nick;
 	tdScore.innerHTML = score;
 
 	tr.classList.add('t-player');
@@ -141,4 +144,14 @@ function ClickAndHold(btn, callback) {
 		e.preventDefault();
 		clearInterval(timer);
 	}));
+}
+
+
+for (let i = 0; i < 500; i += 20) {
+	for (let j = 0; j < 500; j += 20) {
+		const pixel = document.createElement('div');
+		pixel.classList.add('map');
+		pixel.style.transform = `translate(${i}px, ${j}px)`;
+		block.appendChild(pixel);
+	}
 }

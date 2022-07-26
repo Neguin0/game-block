@@ -51,7 +51,7 @@ body {
 	width: 20px;
 	height: 20px;
 	background-color: #999900;
-	transition: all 0.1s;
+	transition: all 0.3s;
 }
 
 #keyboard {
@@ -135,4 +135,13 @@ body {
 	.t-players {
 		margin-left: 0;
 	}
+}
+
+.map{
+	width: 20px;
+	height: 20px;
+
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	
+	position: absolute;
 }
