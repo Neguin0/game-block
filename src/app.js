@@ -32,7 +32,8 @@ io.on('connection', (socket) => {
 			score: 0,
 			nick
 		};
-
+		
+		GetFruit();
 		io.emit('all-new', Object.values(players));
 	});
 
@@ -80,6 +81,14 @@ io.on('connection', (socket) => {
 		}
 
 		io.emit('all-fruit', data);
+	}
+
+	function GetFruit() {
+		io.emit('all-fruit', fruit);
+		return {
+			x: fruit.x,
+			y: fruit.y
+		};
 	}
 });
 

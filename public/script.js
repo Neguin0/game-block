@@ -14,7 +14,8 @@ socket.on('connect', () => {
 	socket.on('all-new', (players) => {
 		players.forEach(player => {
 			if (player.id === socket.id) return;
-			NewPlayer(player)
+			NewPlayer(player);
+			Fruit(players);
 		});
 	});
 
