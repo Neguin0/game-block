@@ -6,6 +6,7 @@ const socket = io.connect(window.location.origin);
 socket.on('connect', () => {
 	let MyNick = prompt('Digite seu nick:');
 	while (!validateNick(MyNick)) MyNick = prompt('Nick Invalido, insira novamente:');
+	MyNick = MyNick || 'Anonimo';
 
 	socket.id = 'player-' + socket.id;
 	NewPlayer({ id: socket.id, x: 0, y: 0, score: 0, nick: MyNick });
@@ -22,6 +23,11 @@ socket.on('connect', () => {
 	socket.on('all-move', MovePlayer);
 	socket.on('all-delete', DeletePlayer);
 	socket.on('all-fruit', Fruit);
+});
+socket.on('disconnect', () => {
+	alert('Você foi desconectado!');
+
+	location.reload();
 });
 
 
