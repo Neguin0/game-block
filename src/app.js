@@ -13,87 +13,78 @@ app.use(cors());
 
 //Database
 let players = {};
-let fruits = [];
+let fruit = {
+	x: 0,
+	y: 0
+};
 
 io.on('connection', (socket) => {
-  const { id } = socket;
-  console.log('Player connected: ', id);
+	const { id } = socket;
+	console.log('Player connected: ', id);
 
-  players[id] = {
-    id,
-    x: 0,
-    y: 0,
-    score: 0
-  };
-	socket.on('new-player', ({nick})=>{
-		players[id].nick = nick;	
+	socket.on('new-player', ({ nick }) => {
+		if (Object.keys(players).length === 0) MoveFruit();
+
+		players[id] = {
+			id,
+			x: 0,
+			y: 0,
+			score: 0,
+			nick
+		};
+
+		io.emit('all-new', Object.values(players));
 	});
 
-  io.emit('all-new', Object.values(players));
+	socket.on('player-move', ({ x, y }) => {
+		const speed = 20;
+		if (x === 1) players[id].x += speed;
+		if (x === -1) players[id].x -= speed;
+		if (y === 1) players[id].y += speed;
+		if (y === -1) players[id].y -= speed;
 
-  socket.on('player-move', ({ x, y }) => {
-    const speed = 20;
-    if (x > 0) players[id].x += speed;
-    if (x < 0) players[id].x -= speed;
-    if (y > 0) players[id].y += speed;
-    if (y < 0) players[id].y -= speed;
+		if (players[id].x < 0) players[id].x = 0;
+		if (players[id].x > 480) players[id].x = 480;
+		if (players[id].y < 0) players[id].y = 0;
+		if (players[id].y > 480) players[id].y = 480;
 
-    if (players[id].x < 0) players[id].x = 0;
-    if (players[id].x > 480) players[id].x = 480;
-    if (players[id].y < 0) players[id].y = 0;
-    if (players[id].y > 480) players[id].y = 480;
+		if (fruit.x === players[id].x && fruit.y === players[id].y) {
+			MoveFruit(id);
+		}
 
-    const fruit = getFruit(players[id].x, players[id].y);
+		io.emit('all-move', players[id]);
+	});
 
-    if (fruit !== undefined) {
-      players[id].score++;
+	socket.on('disconnect', () => {
+		console.log('Player disconnected: ', id);
 
-      io.emit('eat-fruit', {
-        id,
-        score: players[id].score,
-        fruit: fruit.id
-      });
-      fruits.splice(fruit.id, 1);
-    }
+		io.emit('all-delete', players[id]);
+		delete players[id];
+	});
 
-    io.emit('all-move', players[id]);
-  });
 
-  socket.on('disconnect', () => {
-    console.log('Player disconnected: ', id);
-    io.emit('all-delete', players[id]);
-    delete players[id];
-  });
+	function MoveFruit(id) {
+		fruit.x = Random(0, 480 / 20) * 20;
+		fruit.y = Random(0, 480 / 20) * 20;
+
+		let data = {
+			x: fruit.x,
+			y: fruit.y
+		};
+
+		if (id) {
+			players[id].score++;
+
+			data.id = id;
+			data.score = players[id].score;
+		}
+
+		io.emit('all-fruit', data);
+	}
 });
 
-setInterval(() => {
-  if (players.length === 0) return;
-
-  function Random(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  }
-
-  function RandomPos() {
-    return Random(0, 480 / 20) * 20;
-  }
-
-  const fruit = {
-    id: "fruit" + fruits.length ?? fruits.length - 1,
-    x: RandomPos(),
-    y: RandomPos()
-  }
-
-  while (getFruit(fruit.x, fruit.y) !== undefined) {
-    fruit.x = RandomPos();
-    fruit.y = RandomPos();
-  }
-
-  fruits.push(fruit);
-  io.emit('add-fruit', fruit);
-}, 10000);
-
-function getFruit(x, y) {
-  return fruits.find(fruit => fruit.x === x && fruit.y === y);
+function Random(min, max) {
+	return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 module.exports = { app, server, io };

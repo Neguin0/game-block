@@ -51,7 +51,7 @@ body {
 	width: 20px;
 	height: 20px;
 	background-color: #999900;
-	transition: all 0.3s;
+	/* transition: 0.3s linear; */
 }
 
 #keyboard {
@@ -105,13 +105,12 @@ body {
 	padding-right: 20px;
 }
 
-.fruit{
+.fruit {
 	width: 20px;
 	height: 20px;
 	background-color: #00FF00;
 	border-radius: 50%;
 	position: absolute;
-	transition: all 0.3s;
 }
 
 @media (max-width: 500px) {
@@ -137,11 +136,11 @@ body {
 	}
 }
 
-.map{
+.map {
 	width: 20px;
 	height: 20px;
 
 	border: 1px solid rgba(255, 255, 255, 0.1);
-	
+
 	position: absolute;
 }
