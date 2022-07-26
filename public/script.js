@@ -6,6 +6,7 @@ const MyNick = prompt('Digite seu nick:') || 'Anonimo';
 
 const socket = io.connect(window.location.origin);
 socket.on('connect', () => {
+	socket.id = 'player-' + socket.id;
 	NewPlayer({ id: socket.id, x: 0, y: 0, score: 0, nick: MyNick });
 	socket.emit('new-player', { nick: MyNick });
 

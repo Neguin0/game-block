@@ -19,7 +19,7 @@ let fruit = {
 };
 
 io.on('connection', (socket) => {
-	const { id } = socket;
+	const id = 'player-'+socket.id;
 	console.log('Player connected: ', id);
 
 	socket.on('new-player', ({ nick }) => {
