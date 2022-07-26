@@ -33,10 +33,10 @@ io.on('connection', (socket) => {
 
   socket.on('player-move', ({ x, y }) => {
     const speed = 20;
-    if (x > 0) players[id].x += speed;
-    if (x < 0) players[id].x -= speed;
-    if (y > 0) players[id].y += speed;
-    if (y < 0) players[id].y -= speed;
+    if (x === 1) players[id].x += speed;
+    if (x === -1) players[id].x -= speed;
+    if (y === 1) players[id].y += speed;
+    if (y === -1) players[id].y -= speed;
 
     if (players[id].x < 0) players[id].x = 0;
     if (players[id].x > 480) players[id].x = 480;
@@ -90,7 +90,7 @@ setInterval(() => {
 
   fruits.push(fruit);
   io.emit('add-fruit', fruit);
-}, 10000);
+}, 5000);
 
 function getFruit(x, y) {
   return fruits.find(fruit => fruit.x === x && fruit.y === y);
