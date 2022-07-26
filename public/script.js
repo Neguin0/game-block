@@ -2,10 +2,11 @@ const block = document.querySelector('.block');
 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 if (!isMobile) keyboard.style.display = 'none';
 
-const MyNick = prompt('Digite seu nick:') || 'Anonimo';
-
 const socket = io.connect(window.location.origin);
 socket.on('connect', () => {
+	let MyNick = prompt('Digite seu nick:');
+	while (!validateNick(MyNick)) MyNick = prompt('Nick Invalido, insira novamente:');
+
 	socket.id = 'player-' + socket.id;
 	NewPlayer({ id: socket.id, x: 0, y: 0, score: 0, nick: MyNick });
 	socket.emit('new-player', { nick: MyNick });
@@ -71,7 +72,7 @@ const DeletePlayer = ({ id }) => {
 	player.remove();
 }
 
-const Fruit = ({x, y, id, score}) => {
+const Fruit = ({ x, y, id, score }) => {
 	const fruit = document.querySelector('.fruit');
 	if (id) {
 		const table = document.querySelector('.t-players #' + id);
@@ -130,4 +131,13 @@ for (let i = 0; i < 500; i += 20) {
 		pixel.style.transform = `translate(${i}px, ${j}px)`;
 		block.appendChild(pixel);
 	}
+}
+
+
+const validateNick = (nick) => {
+	if (!nick) return false;
+	if (nick.length < 3) return false;
+	if (nick.length > 10) return false;
+	if (nick.match(/[^a-zA-Z0-9]/)) return false;
+	return true;
 }
