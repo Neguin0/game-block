@@ -43,7 +43,6 @@ io.on('connection', (socket) => {
 		io.emit('all-new', Object.values(players));
 
 		console.log('Player connected: ', id, clientIp);
-		console.log('Players: ', players);
 	});
 
 	socket.on('player-move', ({ x, y }) => {
