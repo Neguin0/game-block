@@ -12,20 +12,25 @@ const io = new Server(server);
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(cors());
 
+
 //Database
 let players = {};
 let fruit = {
 	x: 0,
 	y: 0
 };
+let ips = [];
 
 io.on('connection', (socket) => {
 	const id = 'player-' + socket.id;
-	console.log('Player connected: ', id);
+	const clientIp = socket.request.connection.remoteAddress;
+
 
 	socket.on('new-player', ({ nick }) => {
+		if (ips.includes(clientIp)) return socket.disconnect(true);
 		if (Object.keys(players).length === 0) MoveFruit();
 
+		ips.push(clientIp);
 		players[id] = {
 			id,
 			x: 0,
@@ -36,9 +41,14 @@ io.on('connection', (socket) => {
 
 		GetFruit();
 		io.emit('all-new', Object.values(players));
+
+		console.log('Player connected: ', id, clientIp);
+		console.log('Players: ', players);
 	});
 
 	socket.on('player-move', ({ x, y }) => {
+		if (!players[id]) return;
+
 		const speed = 20;
 		if (x === 1) players[id].x += speed;
 		if (x === -1) players[id].x -= speed;
@@ -58,10 +68,13 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on('disconnect', () => {
+		if (!players[id]) return;
+
 		console.log('Player disconnected: ', id);
 
 		io.emit('all-delete', players[id]);
 		delete players[id];
+		ips.splice(ips.indexOf(clientIp), 1);
 	});
 
 
