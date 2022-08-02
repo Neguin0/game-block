@@ -27,6 +27,7 @@ io.on('connection', (socket) => {
 
 
 	socket.on('new-player', ({ nick }) => {
+		if (players[id]) return socket.disconnect(true);
 		if (ips.includes(clientIp)) return socket.disconnect(true);
 		if (Object.keys(players).length === 0) MoveFruit();
 
