@@ -16,23 +16,23 @@ Game Block is a multiplayer block game built using Node.js, Express, and Socket.
 
 Clone the repository:
 
-\`\`\`bash
+```bash
 git clone https://github.com/NeguinDev/game-block.git
-\`\`\`
+```
 
 Install the dependencies:
 
-\`\`\`bash
+```bash
 npm install
-\`\`\`
+```
 
 ## Usage
 
 To start the application, run:
 
-\`\`\`bash
+```bash
 npm start
-\`\`\`
+```
 
 Open `http://localhost:3000` in your web browser.
 
